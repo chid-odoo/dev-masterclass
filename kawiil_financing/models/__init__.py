@@ -11,3 +11,5 @@
 #
 # Nothing in this folder is loaded until it is imported here, and this file in
 # turn does nothing until kawiil_financing/__init__.py imports the folder.
+
+from . import loan_application

@@ -13,7 +13,7 @@
         with demo data enabled. That is also where base.res_partner_1 comes
         from, so the two go together.
     -->
-    <data noupdate="1">
+    <data noupdate="0">
 
         <record id="loan_application_demo_1" model="loan.application">
             <!-- partner_id is required=True on the model, so every record
@@ -26,7 +26,7 @@
                  stores that record's database id. Never hardcode a number:
                  ids differ from one database to the next. -->
             <field name="partner_id" ref="base.res_partner_1"/>
-            <field name="product_id" ref="product.product_product_4"/>
+            <!-- <field name="product_id" ref="product.product_product_4"/> -->
             <!-- A plain date, written the way the database stores it. -->
             <field name="date_applied">2026-01-15</field>
             <field name="loan_amount">12500.00</field>

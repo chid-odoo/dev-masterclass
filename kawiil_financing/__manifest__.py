@@ -17,7 +17,7 @@
 {
     # The app title in the Apps list. This is the text you search for when you
     # install the module.
-    "name": "TODO",
+    "name": "dannytest",
     # One line saying what the module does, shown under the title.
     "summary": "TODO",
     # Where the app is filed in the Apps list. Odoo splits this on "/", so
@@ -36,7 +36,7 @@
     # TODO (assignment 2.03): this module starts linking to products, so swap
     # this for the "product" module. Drop "base" when you do — product already
     # depends on it, and Odoo installs the whole chain for you.
-    "depends": ["base"],
+    "depends": ["product"],
     # Odoo Proprietary License, the default for custom customer work.
     "license": "OPL-1",
     # XML and CSV files Odoo loads on install, in the order you list them.
@@ -67,7 +67,7 @@
     # tags that already exist:
     #     "demo/config_demo.xml",   2.08
     #     "demo/loan_demo.xml",     2.04
-    "demo": [],
+    "demo": ["demo/loan_demo.xml"],
     # True gives the module its own top-level menu and makes it show up as an
     # app. False would make it a technical module that only extends others.
     "application": True,
