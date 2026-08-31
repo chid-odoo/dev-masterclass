@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ODOP assignment 2.06 - record rules.
+
+        Access rights, in ir.model.access.csv, decide whether you may touch a
+        model at all. Record rules decide which rows of it. The CSV lets a User
+        write to loan applications; the rule below narrows that to the ones
+        that are not approved yet.
+
+        Rules attached to a group are combined with OR. A user in two groups
+        gets access if either group's rule allows it, which is what makes the
+        Admin rule below work.
+
+        Heads up, this file has a shelf life. ir.rule is being retired: it is
+        still here in 19.0, and it is already gone from saas-19.4, so it will
+        not exist in Odoo 20. Access rights and record rules merge into a
+        single ir.access model, where the rule becomes a domain column in
+        security/ir.access.csv rather than a record of its own. What you learn
+        here still applies, the two ideas do not change, only where you write
+        them down.
+    -->
+    <data noupdate="0">
+
+        <!-- Worked example. Note the four perm flags: they say which
+             operations the rule polices, and they all default to True. Read is
+             switched off deliberately, so a User can still open and view an
+             approved loan. Create is off because a brand new record has no
+             state to test yet. That leaves write and delete, which is exactly
+             what we want to restrict. -->
+        <record id="loan_application_rule_user" model="ir.rule">
+            <field name="name">Loan Application: user cannot change approved loans</field>
+            <field name="model_id" ref="model_loan_application"/>
+            <field name="groups" eval="[(4, ref('group_kawiil_financing_user'))]"/>
+            <field name="domain_force">[('state', 'not in', ['approved'])]</field>
+            <field name="perm_read" eval="False"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
+        <!--
+            TODO: id loan_application_rule_admin, on the same model, for
+            group_kawiil_financing_admin, with the same four perm flags.
+
+            An Admin is also a User, because the Admin group implies it, so the
+            rule above applies to them too. You cannot remove a rule; you can
+            only add one that says yes. Give this one a domain that matches
+            everything:
+
+                <field name="domain_force">[(1, '=', 1)]</field>
+
+            Odoo then checks (state != approved) OR (1 == 1) for the Admin, and
+            the second half is always true.
+        -->
+
+    </data>
+</odoo>

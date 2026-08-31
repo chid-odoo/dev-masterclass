@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ODOP assignment 2.08 - configuration demo data.
+
+        Tags and document types are configuration: the lists a user picks from.
+        Loans are transactional: the day to day records that point at them.
+        Configuration loads first, which is why this file goes above
+        loan_demo.xml in the manifest.
+
+        Note noupdate="0" here, where loan_demo.xml uses "1". These records are
+        yours to correct, so letting an upgrade refresh them is helpful. A
+        demo loan someone has been editing is not, hence the difference.
+    -->
+    <data noupdate="0">
+
+        <!-- Worked example. -->
+        <record id="tag_vip" model="loan.application.tag">
+            <field name="name">VIP</field>
+            <field name="color">2</field>
+        </record>
+
+        <!--
+            TODO: a second tag, id tag_first_time_buyer, named
+            "First-Time Buyer", with a different colour index.
+        -->
+
+        <!--
+            TODO: two document types.
+
+              id document_type_identity, "Proof of Identity", is_required True
+              id document_type_income,   "Proof of Income",   is_required True
+
+            A Boolean in XML is written eval="True", not as text.
+        -->
+
+    </data>
+</odoo>

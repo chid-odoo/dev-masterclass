@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ODOP assignment 2.06 - security groups.
+
+        Three things live here, and they nest:
+
+            ir.module.category    "Dealership", the heading in Settings
+            res.groups.privilege  "Financing", the dropdown under it
+            res.groups            the options in that dropdown
+
+        In Odoo 19 a group no longer points at a category directly. It points
+        at a privilege, and the privilege points at the category. That is what
+        turns a list of checkboxes into a single dropdown per privilege.
+
+        The category, the privilege and the User group are written out for you.
+        The Admin group is yours.
+    -->
+    <data noupdate="0">
+
+        <record id="module_category_dealership" model="ir.module.category">
+            <field name="name">Dealership</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="privilege_financing" model="res.groups.privilege">
+            <field name="name">Financing</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="module_category_dealership"/>
+        </record>
+
+        <!-- Worked example. implied_ids is the inheritance chain: anyone in
+             this group is also treated as being in base.group_user, the
+             baseline "internal user" group that every employee has. The (4, id)
+             tuple means "add this record to the set", leaving anything already
+             there alone. -->
+        <record id="group_kawiil_financing_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_financing"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!--
+            TODO: id group_kawiil_financing_admin, name "Admin", sequence 20,
+            on the same privilege, and implying group_kawiil_financing_user so
+            an Admin gets everything a User gets and more.
+
+            Add this line to it as well, so that installing the module puts the
+            Mitchell Admin account straight into the group and you can test
+            without hunting through Settings:
+
+                <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+
+            user_ids is the same relationship as the user form's group list,
+            seen from the group's side. base.user_admin is the external id of
+            the Mitchell Admin account that ships with demo data.
+        -->
+
+    </data>
+</odoo>

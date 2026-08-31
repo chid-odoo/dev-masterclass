@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ODOP assignment 2.04 - sample loan applications.
+
+        Loan 1 below is a worked example. Add loans 2 and 3 where marked TODO.
+
+        noupdate="1" tells Odoo to create these records once and then leave
+        them alone. Without it, upgrading the module would overwrite any edit
+        you made to them in the interface.
+
+        Everything in a demo file loads only when the database was created
+        with demo data enabled. That is also where base.res_partner_1 comes
+        from, so the two go together.
+    -->
+    <data noupdate="1">
+
+        <record id="loan_application_demo_1" model="loan.application">
+            <!-- partner_id is required=True on the model, so every record
+                 here has to set it or the install crashes. name is not
+                 required, but a record without one shows up as
+                 "loan.application,4" in every dropdown, so always give it
+                 one. -->
+            <field name="name">LOAN/2026/001</field>
+            <!-- ref looks up another record by its external identifier and
+                 stores that record's database id. Never hardcode a number:
+                 ids differ from one database to the next. -->
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <!-- A plain date, written the way the database stores it. -->
+            <field name="date_applied">2026-01-15</field>
+            <field name="loan_amount">12500.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+            <field name="state">sent</field>
+        </record>
+
+        <!--
+            TODO loan 2: id loan_application_demo_2, linked to
+            base.res_partner_2, with date_applied set to 5 months ago.
+
+            A fixed date would drift out of date as the course runs, so
+            calculate it instead. eval runs a Python expression when the file
+            loads, and Odoo puts DateTime and relativedelta in scope for you:
+
+                <field name="date_applied"
+                       eval="(DateTime.now() - relativedelta(months=5)).strftime('%Y-%m-%d')"/>
+
+            Fill in the rest of the fields with values of your own.
+            interest_rate from 2.02, and partner_id and loan_amount from 2.03,
+            are all required=True, so every record here has to set those three
+            or the module will crash on update.
+        -->
+
+        <!--
+            TODO loan 3: id loan_application_demo_3, linked to
+            base.res_partner_3, with date_applied set to 2 months ago. Same
+            eval technique as loan 2, and the same required fields.
+        -->
+
+    </data>
+</odoo>

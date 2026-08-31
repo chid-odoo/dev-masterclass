@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ODOP assignment 2.08 - tag views.
+
+        A worked example of the pair you need for any configuration table: a
+        view that says how to display it, and an action that opens that view.
+        loan_application_document_type_views.xml is the same shape, and it is
+        yours to write.
+    -->
+
+    <record id="view_loan_application_tag_list" model="ir.ui.view">
+        <!-- A technical label, by convention model name plus view type. -->
+        <field name="name">loan.application.tag.list</field>
+        <field name="model">loan.application.tag</field>
+        <!-- arch is the view itself. type="xml" tells Odoo to store the tags
+             below as markup rather than escape them into text. -->
+        <field name="arch" type="xml">
+            <!-- editable="bottom" turns the list into a grid you type
+                 straight into, with new rows appearing at the end. Without it
+                 every tag would need its own form view, which for two columns
+                 is more clicking than typing. -->
+            <list string="Tags" editable="bottom">
+                <field name="name"/>
+                <field name="color" widget="color_picker"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_loan_application_tag" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">loan.application.tag</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        ODOP assignment 2.08 - document type views.
+
+        TODO: a list view and an action for loan.application.document.type,
+        following loan_application_tag_views.xml.
+
+        The view: id view_loan_application_document_type_list, on model
+        loan.application.document.type, with an editable="bottom" list showing
+        name and is_required.
+
+        The action: id action_loan_application_document_type, named
+        "Document Types", on the same model, view_mode list.
+
+        You do not need to put active in the list. Odoo knows that field and
+        hides archived records for you, and it adds an Archived filter to the
+        search panel on its own.
+    -->
+</odoo>

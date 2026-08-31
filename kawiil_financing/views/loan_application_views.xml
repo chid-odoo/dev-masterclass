@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Loan application: action and views.
+
+        Built up across three assignments:
+          2.05  the action, opening Odoo's automatic views
+          2.07  real list, form and search views, replacing those
+          2.08  the tags field and the Compliance Checklist page
+
+        A view is a record like any other. The layout lives in the arch field
+        as markup, and Odoo picks the highest priority view of each type for a
+        model unless an action names one explicitly.
+    -->
+
+    <!-- Assignment 2.05. Worked example. -->
+    <record id="action_loan_application" model="ir.actions.act_window">
+        <field name="name">Loan Applications</field>
+        <field name="res_model">loan.application</field>
+        <!-- Use list, not tree: tree was renamed in Odoo 18. -->
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first loan application</p>
+            <p>Track motorcycle financing from first enquiry through to signature.</p>
+        </field>
+    </record>
+
+    <!--
+        Assignment 2.07. Worked example. Uncomment the record below when you
+        reach 2.07 — delete the two comment markers around it, nothing else.
+
+        A Monetary column needs its currency field present to render, but
+        nobody wants to see a column of identical currencies.
+        column_invisible loads it without showing it.
+
+        Bonus exercise: try widget="badge" on state, or a decoration-danger
+        attribute driven by a domain, to make the rows carry meaning at a
+        glance.
+    -->
+    <!--
+    <record id="loan_application_view_list" model="ir.ui.view">
+        <field name="name">loan.application.view.list</field>
+        <field name="model">loan.application</field>
+        <field name="arch" type="xml">
+            <list string="Loan Applications">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="loan_amount"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+    -->
+
+    <!--
+        Assignment 2.07. Worked example, and the answer to "why are my fields
+        stacked vertically". Uncomment the record below when you reach 2.07.
+
+        The nesting is what makes the columns. The outer group opens a column
+        layout; each inner group becomes one column of labels and fields. A
+        single group on its own gives you one column, everything stacked.
+
+        A notebook holds the detail. Anything a user needs at a glance goes on
+        the sheet above it; everything else earns a page.
+
+        Three things worth reading closely as you uncomment it:
+
+          header       the strip above the sheet. A statusbar shows the
+                       workflow as a row of stages instead of a dropdown.
+          oe_title     the large heading area at the top left of a sheet,
+                       where the record's identity goes.
+          currency_id  carries invisible="1". Monetary fields need their
+                       currency on the form to render, but nobody needs to
+                       see it.
+    -->
+    <!--
+    <record id="loan_application_view_form" model="ir.ui.view">
+        <field name="name">loan.application.view.form</field>
+        <field name="model">loan.application</field>
+        <field name="arch" type="xml">
+            <form string="Loan Application">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="date_applied"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Financials">
+                            <group>
+                                <group>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="loan_amount"/>
+                                    <field name="down_payment"/>
+                                </group>
+                                <group>
+                                    <field name="loan_term"/>
+                                    <field name="interest_rate"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Internal Notes">
+                            <field name="notes" placeholder="Add internal notes here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    -->
+
+    <!--
+        TODO (assignment 2.08): two additions to the form above, once you have
+        uncommented it in 2.07.
+
+        1. tag_ids, on a line of its own directly above the first <group>.
+           many2many_tags draws the links as coloured pills, and color_field
+           says which field holds the palette index:
+
+               <field name="tag_ids" widget="many2many_tags"
+                      options="{'color_field': 'color'}"
+                      placeholder="Tags..."/>
+
+        2. a page titled "Compliance Checklist", after the Financials page,
+           holding document_ids in an embedded editable list so paperwork can
+           be added without leaving the loan:
+
+               <page string="Compliance Checklist">
+                   <field name="document_ids">
+                       <list editable="bottom">
+                           ... the columns you want ...
+                       </list>
+                   </field>
+               </page>
+    -->
+
+    <!--
+        TODO (assignment 2.07): the search view.
+
+        id loan_application_view_search, on loan.application, wrapping a
+        <search> element that holds three kinds of child.
+
+        1. Searchable fields. These are what the box at the top matches when
+           someone types:
+
+               <field name="name"/>
+               <field name="partner_id"/>
+
+        2. Filters, one per shortcut. Each needs a name, a label, and a domain:
+
+               <filter name="filter_draft" string="Draft"
+                       domain="[('state', '=', 'draft')]"/>
+
+           Add Archived, Draft and Approved. Archived filters on active rather
+           than state, and the value is the Python False, not the text
+           "false":
+
+               domain="[('active', '=', False)]"
+
+           Put a <separator/> between the Archived filter and the state ones.
+           Filters in the same block are combined with OR, and a separator
+           starts a new block, which is combined with AND. Without it,
+           selecting Archived and Draft would show records that are either,
+           rather than both.
+
+        3. Group By options, which set a context instead of a domain. Wrap
+           them in a plain group so they land in their own column of the
+           dropdown:
+
+               <group>
+                   <filter name="group_by_state" string="Status"
+                           context="{'group_by': 'state'}"/>
+               </group>
+
+           Add one for state and one for partner_id. Give every filter its own
+           name: duplicates confuse Odoo about which one is active.
+
+    -->
+
+</odoo>
