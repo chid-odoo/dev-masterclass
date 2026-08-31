@@ -23,7 +23,6 @@
         <field name="book_id" ref="book_clean_code"/>
         <field name="partner_id" ref="base.res_partner_2"/>
         <field name="checkout_date" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="due_date" eval="(datetime.date.today() + datetime.timedelta(days=14)).strftime('%Y-%m-%d')"/>
         <field name="state">ongoing</field>
     </record>
 
