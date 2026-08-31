@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="book_odoo_essentials" model="library.book">
+        <field name="title">Odoo Development Essentials</field>
+        <field name="author">Daniel Reis</field>
+        <field name="isbn">978-1-78439-279-6</field>
+    </record>
+
+    <record id="book_clean_code" model="library.book">
+        <field name="title">Clean Code</field>
+        <field name="author">Robert C. Martin</field>
+        <field name="isbn">978-0-13-235088-4</field>
+    </record>
+
+    <record id="book_python_tricks" model="library.book">
+        <field name="title">Python Tricks</field>
+        <field name="author">Dan Bader</field>
+        <field name="isbn">978-1-7750-3513-9</field>
+    </record>
+
+    <record id="checkout_demo_1" model="library.checkout">
+        <field name="book_id" ref="book_clean_code"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="checkout_date" eval="time.strftime('%Y-%m-%d')"/>
+        <field name="due_date" eval="(datetime.date.today() + datetime.timedelta(days=14)).strftime('%Y-%m-%d')"/>
+        <field name="state">ongoing</field>
+    </record>
+
+</odoo>

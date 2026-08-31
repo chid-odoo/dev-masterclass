@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Root menu -->
+    <menuitem id="kawiil_library_menu_root"
+        name="Library"
+        sequence="50"/>
+
+    <!-- Books menu -->
+    <menuitem id="kawiil_library_menu_books"
+        name="Books"
+        parent="kawiil_library_menu_root"
+        action="library_book_action"
+        sequence="10"/>
+
+    <!-- Checkouts menu -->
+    <menuitem id="kawiil_library_menu_checkouts"
+        name="All Checkouts"
+        parent="kawiil_library_menu_root"
+        action="library_checkout_action"
+        sequence="20"/>
+
+    <!-- Active Checkouts menu -->
+    <menuitem id="kawiil_library_menu_active_checkouts"
+        name="Active Checkouts"
+        parent="kawiil_library_menu_root"
+        action="library_checkout_active_action"
+        sequence="30"/>
+
+</odoo>
