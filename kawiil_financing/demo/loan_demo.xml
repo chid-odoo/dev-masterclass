@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Read this before 3.01, it explains why these records look the way they
+             do. They used to set loan_amount directly. That works while loan_amount
+             is a plain column, but the moment you make it computed at 3.01 a direct
+             write runs your inverse method instead: it works a down_payment back out
+             of a principal_amount nobody set, and the 2500.00 below is replaced by a
+             negative figure. The CHECK constraint you add at 3.02 then refuses the
+             record outright, because its principal is zero.
+
+             So they set principal_amount and down_payment, and let loan_amount fall
+             out of the arithmetic. That is the general lesson: once a field is
+             derived, writing to it is no longer the same thing as setting it.
+
+             Until you do 3.01 these applications show a loan amount of zero, since
+             nothing sets it and nothing works it out yet. Making that column right
+             is the first thing 3.01 does. -->
+        <record id="loan_application_demo_1" model="loan.application">
+            <field name="name">LOAN/2026/001</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="date_applied">2026-01-15</field>
+            <field name="principal_amount">15000.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+        </record>
+        <record id="loan_application_demo_2" model="loan.application">
+            <field name="name">LOAN/2026/002</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="date_applied" eval="(DateTime.now() - relativedelta(months=5)).strftime('%Y-%m-%d')"/>
+            <field name="principal_amount">20000.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+            <field name="state">draft</field>
+        </record>
+        <record id="loan_application_demo_3" model="loan.application">
+            <field name="name">LOAN/2026/003</field>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="date_applied" eval="(DateTime.now() - relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+            <field name="principal_amount">20000.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+            <field name="state">draft</field>
+        </record>
+        <function model="loan.application.document" name="action_approve_document"
+            eval="[obj().search([('application_id','=',ref('loan_application_demo_1')),
+            ('type_id.is_required','=',True)]).ids]"/>
+        <function model="loan.application" name="action_submit"
+            eval="[[ref('loan_application_demo_1')]]"/>
+    </data>
+</odoo>

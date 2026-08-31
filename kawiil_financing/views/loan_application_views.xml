@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_loan_application" model="ir.actions.act_window">
+        <field name="name">Loan Applications</field>
+        <field name="res_model">loan.application</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create your first loan application</p>
+            <p>Track motorcycle financing from first enquiry through to signature.</p>
+        </field>
+    </record>
+
+
+    <record id="loan_application_view_list" model="ir.ui.view">
+        <field name="name">loan.application.view.list</field>
+        <field name="model">loan.application</field>
+        <field name="arch" type="xml">
+            <list string="Loan Applications" multi_edit="1">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags..."/>
+                <field name="loan_amount"/>
+                <field name="state" widget="badge" optional="show"
+                       decoration-success="state == 'approved'"
+                       decoration-info="state == 'sent'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="loan_application_view_form" model="ir.ui.view">
+        <field name="name">loan.application.view.form</field>
+        <field name="model">loan.application</field>
+        <field name="arch" type="xml">
+            <form string="Loan Application">
+                <header>
+                    <button name="action_approve_loan" type="object"
+                            string="Approve" class="btn-primary"
+                            invisible="state != 'sent'"/>
+                    <button name="action_reject_loan" type="object"
+                            string="Reject" class="btn-secondary"
+                            invisible="state != 'sent'"/>
+                    <button name="action_submit" type="object"
+                            string="Submit" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags..."/>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="product_id"/>
+                        </group>
+                        <group>
+                            <field name="date_applied"/>
+                            <field name="date_approved" invisible="not date_approved"/>
+                            <field name="date_rejected" invisible="not date_rejected"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Financials">
+                            <group>
+                                <group>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="principal_amount" widget="monetary"/>
+                                    <field name="down_payment" widget="monetary"/>
+                                    <field name="loan_amount" widget="monetary"/>
+                                   
+                                </group>
+                                <group>
+                                    <field name="loan_term"/>
+                                    <field name="interest_rate"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Compliance Checklist">
+                            <field name="document_ids">
+                                <list editable="bottom">
+                                    <field name="type_id"/>
+                                    <field name="name"/>
+                                    <field name="attachment_id"/>
+                                    <field name="state"/>
+                                    <button name="action_approve_document"
+                                            type="object" icon="fa-check"
+                                            title="Approve"/>
+                                    <button name="action_reject_document"
+                                            type="object" icon="fa-times"
+                                            title="Reject"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Internal Notes">
+                            <field name="notes" placeholder="Add internal notes here..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="loan_application_view_search" model="ir.ui.view">
+        <field name="name">loan.application.view.search</field>
+        <field name="model">loan.application</field>
+        <field name="arch" type="xml">
+            <search string="Search Loan Applications">
+                <field name="name"/>
+                <field name="partner_id"/>
+
+                <filter name="filter_archived" string="Archived" domain="[('active','=',False)]"/>
+                <separator/> <!-- Change logic from OR to AND -->
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="filter_approved" string="Approved" domain="[('state','=','approved')]"/>
+
+                <group>
+                    <filter name="group_by_tags" string="Tags" context="{'group_by': 'tag_ids'}"/>
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_customer" string="Customer" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>
