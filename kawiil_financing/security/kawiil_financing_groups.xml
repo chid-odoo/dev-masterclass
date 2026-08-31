@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="module_category_dealership" model="ir.module.category">
+            <field name="name">Dealership</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="privilege_financing" model="res.groups.privilege">
+            <field name="name">Financing</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="module_category_dealership"/>
+        </record>
+
+        <record id="group_kawiil_financing_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="privilege_financing"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_kawiil_financing_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="sequence">20</field>
+            <field name="privilege_id" ref="privilege_financing"/>
+            <field name="implied_ids" eval="[(4, ref('group_kawiil_financing_user'))]"/>
+        </record>
+
+    </data>
+    <!-- To grant Admin access to the Admin user on install you can extend the original record and link it to the group.-->
+    <data noupdate="1">
+        <!-- The XML ID also includes the prefix of the module where the record is defined. -->
+        <record id="base.user_admin" model="res.users">
+            <field name="group_ids" eval="[Command.link(ref('group_kawiil_financing_admin'))]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Read this before 3.01, it explains why these records look the way they
+             do. They used to set loan_amount directly. That works while loan_amount
+             is a plain column, but the moment you make it computed at 3.01 a direct
+             write runs your inverse method instead: it works a down_payment back out
+             of a principal_amount nobody set, and the 2500.00 below is replaced by a
+             negative figure. The CHECK constraint you add at 3.02 then refuses the
+             record outright, because its principal is zero.
+
+             So they set principal_amount and down_payment, and let loan_amount fall
+             out of the arithmetic. That is the general lesson: once a field is
+             derived, writing to it is no longer the same thing as setting it.
+
+             Until you do 3.01 these applications show a loan amount of zero, since
+             nothing sets it and nothing works it out yet. Making that column right
+             is the first thing 3.01 does. -->
+        <record id="loan_application_demo_1" model="loan.application">
+            <field name="name">LOAN/2026/001</field>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="product_id" ref="product.product_product_4"/>
+            <field name="date_applied">2026-01-15</field>
+            <field name="principal_amount">15000.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+            <field name="state">sent</field>
+        </record>
+        <record id="loan_application_demo_2" model="loan.application">
+            <field name="name">LOAN/2026/002</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="product_id" ref="product.product_product_3"/>
+            <field name="date_applied" eval="(DateTime.now() - relativedelta(months=5)).strftime('%Y-%m-%d')"/>
+            <field name="principal_amount">20000.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+            <field name="state">draft</field>
+        </record>
+        <record id="loan_application_demo_3" model="loan.application">
+            <field name="name">LOAN/2026/003</field>
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="date_applied" eval="(DateTime.now() - relativedelta(months=2)).strftime('%Y-%m-%d')"/>
+            <field name="principal_amount">20000.00</field>
+            <field name="down_payment">2500.00</field>
+            <field name="loan_term">48</field>
+            <field name="interest_rate">7.50</field>
+            <field name="state">draft</field>
+        </record>
+
+        <!-- TODO (3.03): these records set state by hand, which walks straight
+             past the workflow you just built. Leave them for now: putting them
+             through the real methods means every application needs its compliance
+             documents first, and those do not exist yet. You come back to this at
+             3.04, once create() builds the checklist for you. -->
+
+        <!-- OPTIONAL (3.04): a stretch exercise, not part of the chapter. Skip it if
+             you are short of time.
+
+             Now that create() fills in the checklist, these records get their
+             document lines for free, and the state above can stop being a
+             hand-written lie. Replace it with the methods that earn it:
+
+                 <function model="loan.application.document" name="action_approve_document"
+                          eval="[obj().search([('application_id','=',ref('loan_application_demo_1')),
+                                               ('type_id.is_required','=',True)]).ids]"/>
+                 <function model="loan.application" name="action_submit"
+                          eval="[[ref('loan_application_demo_1')]]"/>
+
+             Approve first, then submit: action_submit refuses an application whose
+             required documents are not settled, which is the whole point of it.
+             Drop the state field from loan_application_demo_1 and let the calls set
+             it. Odoo's own demo data works this way, e.g. crm_lead_demo.xml calling
+             action_set_won. Only demo_1 needs it, since draft is the default.
+
+             Two details that decide whether this works:
+
+             1. `obj` in an eval is that function's own model, so obj().search(...)
+                searches loan.application.document. The lines are created by your
+                override and have no xml ids, so searching is how you reach them.
+             2. A function node runs in file order, so it has to sit after the
+                records it acts on. Inside data noupdate="1" it runs on install only
+                and is skipped on a module update.
+
+             Note that action_submit stamps date_applied with today, so demo_1 gives
+             up its fixed 2026-01-15 date.
+
+             Worth knowing before you spend time on it: demo data is loaded when the
+             module is installed, not when it is updated, and a function node inside
+             noupdate="1" is skipped on an update entirely. On a build that only
+             updates the module you will write this correctly and see nothing change.
+             It takes a fresh install to observe. -->
+
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_view_form_inherit_kawiil_financing" model="ir.ui.view">
+        <field name="name">res.partner.view.form.inherit.kawiil.financing</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- View inheritance works by locating a point in the original view and
+                 saying what to do there. The button box is an empty div in the
+                 standard partner form, waiting for modules to fill it, and
+                 position="inside" appends to it without disturbing whatever another
+                 module has already added. -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <!-- TODO (3.05): the smart button.
+                     A <button> with type="object" and name= set to your action
+                     method, so clicking it runs Python rather than an action record.
+                     Give it class="oe_stat_button" — that class is what makes it a
+                     smart button rather than an ordinary one, and the task sheet
+                     leaves it out. icon="fa-money" for the picture.
+                     Inside the button, render loan_application_count with
+                     widget="statinfo", which is the widget that draws a number above
+                     its label in a stat button. -->
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
