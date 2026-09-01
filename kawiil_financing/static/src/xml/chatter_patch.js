@@ -8,6 +8,8 @@ patch(Chatter.prototype, {
     setup() {
         super.setup();
         onWillStart(async () => {
+            console.log(user)
+            console.log(await user.hasGroup('kawiil_financing.group_xyz'))
             this.canSendMessage = await user.hasGroup("kawiil_financing.group_xyz");
         });
     },
