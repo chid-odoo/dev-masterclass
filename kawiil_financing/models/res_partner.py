@@ -31,5 +31,5 @@ class ResPartner(models.Model):
             "res_model": "loan.application",
             "view_mode": "list,form",
             "domain": [("partner_id", "=", self.id)],
-            "context": {"default_partner_id": self.id},
+            "context": {"default_partner_id": self.id, },
         }

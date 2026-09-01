@@ -72,7 +72,7 @@ class LoanApplication(models.Model):
     # not something anyone can be asked to fill in, and a required column with
     # nothing writing to it only produces NOT NULL errors.
     principal_amount = fields.Monetary(
-        string="Principal Amount", required=True, currency_field="currency_id"
+        string="Principal Amount", required=True, currency_field="currency_id", tracking=True
     )
 
     loan_amount = fields.Monetary(currency_field="currency_id", compute="_compute_loan_amount", inverse="_inverse_loan_amount")
@@ -213,10 +213,15 @@ class LoanApplication(models.Model):
         for vals in vals_list:
             if doc_types:
                 # Prepare the creation commands
-                commands = [Command.create({'type_id': dt.id}) for dt in doc_types]
+
+                # doc_types = [{id: 1}, {id: 2}, {id: 3}]
                 
+                commands = [Command.create({'type_id': dt.id}) for dt in doc_types]
+
+                # commands = 
                 # Append to existing document_ids if they exist, otherwise initialize
                 vals['document_ids'] = vals.get('document_ids', []) + commands
 
+                # vals['document_ids'] = [Command.create(), Command.create(), Command.create()]
         # 3. Pass the modified vals_list to the standard ORM creation method
         return super().create(vals_list)

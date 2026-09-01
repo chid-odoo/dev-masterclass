@@ -6,7 +6,7 @@
     "website": "https://github.com/odoo-trainings/development-masterclass",
     "version": "1.0.0",
     "author": "ODOP Trainee",
-    "depends": ["contacts", "product"],
+    "depends": ["mail", "contacts", "product"],
     "license": "OPL-1",
     "data": [
         "security/kawiil_financing_groups.xml",
@@ -22,5 +22,10 @@
         "demo/config_demo.xml",
         "demo/loan_demo.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "kawiil_financing/static/src/xml/chatter_patch.xml"
+        ]
+    },
     "application": True,
 }
