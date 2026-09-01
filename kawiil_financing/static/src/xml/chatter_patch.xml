@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <templates xml:space="preserve">
-      <t t-name="kawiil_financing.Chatter" t-inherit="mail.Chatter" t-inherit-mode="primary">
+      <t t-name="kawiil_financing.Chatter" t-inherit="mail.Chatter" t-inherit-mode="extension">
           <xpath expr="//button[hasclass('o-mail-Chatter-sendMessage')]" position="replace">
               <!-- <attribute name="t-if">false</attribute> -->
               <span style="color:red;font-weight:bold">PATCH APPLIED</span>
