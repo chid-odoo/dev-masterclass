@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
   <templates xml:space="preserve">
-      <t t-name="kawiil_financing.Chatter" t-inherit="mail.Chatter" t-inherit-mode="extension">
-          <xpath expr="//button[hasclass('o-mail-Chatter-sendMessage')]" position="replace"/>
-              <!-- <attribute name="t-if">false</attribute> -->
+      <t t-name="kawiil_financing.Chatter" t-inherit="mail.Chatter" t-inherit-mode="primary">
+          <xpath expr="//button[hasclass('o-mail-Chatter-sendMessage')]" position="attributes">
+              <attribute name="t-if">canSendMessage</attribute>
               <!-- <span style="color:red;font-weight:bold">PATCH APPLIED</span> -->
-          <!-- </xpath> -->
+          </xpath>
       </t>
-  </templates>
+  </templates>  

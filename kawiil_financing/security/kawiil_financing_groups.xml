@@ -20,6 +20,11 @@
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
+        <record id="group_xyz" model="res.groups">
+            <field name="name">Can Send Chatter Message</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>   
+
         <record id="group_kawiil_financing_admin" model="res.groups">
             <field name="name">Admin</field>
             <field name="sequence">20</field>
