@@ -10,7 +10,7 @@
         <record id="privilege_financing" model="res.groups.privilege">
             <field name="name">Financing</field>
             <field name="sequence">10</field>
-            <field name="category_id" ref="module_category_dealership"/>
+            <!-- <field name="category_id" ref="module_category_dealership"/> -->
         </record>
 
         <record id="group_kawiil_financing_user" model="res.groups">
