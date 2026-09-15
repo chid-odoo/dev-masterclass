@@ -28,6 +28,8 @@ class LoanApplication(models.Model):
     # here rather than "Application Number".
     name = fields.Char(string="Application Number")
 
+    loan_term = fields.Integer(string="Term (Months)", default=36)
+
     # TODO: loan_term — Integer, labelled "Term (Months)", defaulting to 36.
 
     # TODO: interest_rate — Float, labelled "Interest Rate", required=True.
